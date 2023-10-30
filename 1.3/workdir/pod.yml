@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: static-web
+spec:
+  initContainers:
+    - name: init-create-dir
+      image: alpine
+      command: ['sh', '-c', 'sleep 5 && echo "creating dir" && mkdir -p /opt/log && echo test > /opt/log/test.txt']
+      volumeMounts:
+        - name: data
+          mountPath: /opt
+  containers:
+    - name: app
+      image: alpine
+      command: ['sh', '-c', 'echo "app is running " && sleep infinity']
+      volumeMounts:
+        - name: data
+          mountPath: /opt
+  volumes:
+    - name: data
+      emptyDir: {}
+
