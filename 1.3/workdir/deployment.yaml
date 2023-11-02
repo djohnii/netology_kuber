@@ -20,4 +20,4 @@ spec:
       initContainers:
         - name: init
           image: busybox
-          command:  ['sh', '-c', 'until nslookup nginx; do echo waiting for nginx; sleep 2; done;']
+          command:  ['sh', '-c', 'until nslookup nginx.netology.svc.cluster.local; do echo waiting for nginx; sleep 2; done;']
