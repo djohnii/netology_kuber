@@ -13,9 +13,9 @@ spec:
           - pathType: Prefix
             backend:
               service:
-                name: front
+                name: back
                 port: 
-                  number: 80
+                  number: 8080
             path: /api
   # tls:
   #   - hosts:
