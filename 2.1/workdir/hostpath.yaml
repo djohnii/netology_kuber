@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostpath
+spec:
+  volumes:
+    - name: host
+      hostPath:
+        path: /test
+  containers:
+    - image: busybox
+      name: hostpath
+      args:
+        - /bin/sh
+        - c
+        - sleep infinity
+      volumeMounts:
+        - mountPath: /var
+          name: host

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: create-dir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dir
+  template:
+    metadata:
+      labels:
+        app: dir
+    spec:
+      # initContainers:
+      #   - name: app1-init
+      #     image: alpine
+      #     command: ['sh', '-c', 'sleep 5 && echo "create dir" && mkdir -p /opt/log && echo test > /opt/log/test.txt ']
+      #     volumeMounts:
+      #       - name: data
+      #         mountPath: /opt
+      containers:
+        - name: busybox
+          image: busybox
+          # command: ["/bin/sh"]
+          command: ['sh', '-c', 'sleep 10 && echo "create dir" && mkdir -p /opt/log && for i in $(seq 1 10); do echo $i >> /opt/log/test.txt; sleep 5; done; sleep infinity']
+          volumeMounts:
+            - name: data1
+              mountPath: /opt
+        - name: multitool
+          image: wbitt/network-multitool
+          volumeMounts:
+            - name: data1
+              mountPath: /output
+      volumes:
+        - name: data1
+          emptyDir: {}
