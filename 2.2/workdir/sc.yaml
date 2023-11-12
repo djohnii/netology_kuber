@@ -1,0 +1,13 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-csi
+provisioner: cluster.local/nfs-server-nfs-server-provisioner
+parameters:
+  server: 192.168.26.243
+  share: /srv/nfs
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - hard
+  - nfsvers=4.1
