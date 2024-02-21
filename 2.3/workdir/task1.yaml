@@ -2,34 +2,70 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: mymap
+  # namespace: ingress-nginx
 data:
   port: "8080"
+  default.conf: |
+      server {
+      listen 80;
+      server_name mysite.com;
+
+      location / {
+        root /usr/share/nginx/html;
+        }
+      }
+  index.html: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>My Website Home Page</title>
+      </head>
+      <body>
+
+        <p>This page is served by Nginx.</p>
+      </body>
+      </html>
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: create-dir
+  name: app
+  # namespace: ingress-nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dir
+      app: webnginx
   template:
     metadata:
       labels:
-        app: dir
+        app: webnginx
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - name: nginx
+        image: nginx
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/
+          name: vol
+      volumes:
+      - name: vol
+        configMap:
+          name: mymap
 
-      - name: multitool
-        image: wbitt/network-multitool
-        env:
-          - name: HTTP_PORT
-            valueFrom:
-              configMapKeyRef:
-                name: mymap
-                key: port
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginxservice
+  # namespace: ingress-nginx
+spec:
+  selector:
+    app: webnginx
+  ports:
+    - name: nginx
+      protocol: TCP
+      port: 9001
+      targetPort: 80
