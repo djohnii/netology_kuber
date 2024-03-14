@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mymap
+  # namespace: ingress-nginx
+data:
+  port: "8080"
+  default.conf: |
+      server {
+      listen 80;
+      server_name mysite.com;
+
+      location / {
+        root /usr/share/nginx/html;
+        }
+      }
+  index.html: |
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>My Website Home Page</title>
+      </head>
+      <body>
+
+        <p>This page is served by Nginx.</p>
+      </body>
+      </html>
